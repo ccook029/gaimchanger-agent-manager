@@ -15,7 +15,7 @@ export function GaimchangerLogoHorizontal({
 }) {
   return (
     <Image
-      src="/logo-horizontal.png"
+      src="/GAIM CHANGER LOGO-Transparent-02.png"
       alt="Gaimchanger Golf"
       width={Math.round(height * 5.5)}
       height={height}
@@ -34,7 +34,7 @@ export function GaimchangerLogoStacked({
 }) {
   return (
     <Image
-      src="/logo-stacked.png"
+      src="/GAIM CHANGER LOGO-Transparent-03.png"
       alt="Gaimchanger Golf"
       width={Math.round(height * 1.4)}
       height={height}
