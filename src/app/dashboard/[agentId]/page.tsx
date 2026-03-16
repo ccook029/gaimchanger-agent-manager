@@ -66,7 +66,7 @@ export default function AgentDetailPage() {
         </p>
         <Link
           href="/dashboard"
-          className="text-[#2d8a4e] hover:text-[#3aa85e] transition-colors"
+          className="text-[#B5A36B] hover:text-[#3aa85e] transition-colors"
         >
           Back to Dashboard
         </Link>
@@ -125,7 +125,7 @@ export default function AgentDetailPage() {
         <button
           onClick={handleRun}
           disabled={running}
-          className="px-4 py-2 bg-[#2d8a4e] hover:bg-[#24713f] text-white rounded-lg font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="px-4 py-2 bg-[#B5A36B] hover:bg-[#C9BA88] text-black font-semibold rounded-lg text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
           {running ? (
             <>
@@ -179,7 +179,7 @@ export default function AgentDetailPage() {
             onClick={() => setActiveTab('history')}
             className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
               activeTab === 'history'
-                ? 'text-white border-[#2d8a4e]'
+                ? 'text-white border-[#B5A36B]'
                 : 'text-neutral-500 border-transparent hover:text-neutral-300'
             }`}
           >
@@ -189,7 +189,7 @@ export default function AgentDetailPage() {
             onClick={() => setActiveTab('files')}
             className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
               activeTab === 'files'
-                ? 'text-white border-[#2d8a4e]'
+                ? 'text-white border-[#B5A36B]'
                 : 'text-neutral-500 border-transparent hover:text-neutral-300'
             }`}
           >

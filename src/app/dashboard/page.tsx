@@ -93,7 +93,7 @@ export default function DashboardPage() {
         <button
           onClick={runAllAgents}
           disabled={running}
-          className="px-4 py-2 bg-[#2d8a4e] hover:bg-[#24713f] text-white rounded-lg font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="px-4 py-2 bg-[#B5A36B] hover:bg-[#C9BA88] text-black font-semibold rounded-lg text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
           {running ? (
             <>
@@ -193,7 +193,7 @@ function AgentCard({
             {agent.avatar.initials}
           </div>
           <div>
-            <h3 className="font-semibold text-white group-hover:text-[#2d8a4e] transition-colors">
+            <h3 className="font-semibold text-white group-hover:text-[#B5A36B] transition-colors">
               {agent.name}
             </h3>
             <p className="text-neutral-500 text-xs">{agent.title}</p>

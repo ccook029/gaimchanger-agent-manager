@@ -71,8 +71,8 @@ export function buildReportEmail(
       <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #e5e5e5; padding: 20px; }
         .container { max-width: 700px; margin: 0 auto; }
-        .header { border-bottom: 2px solid #2d8a4e; padding-bottom: 16px; margin-bottom: 24px; }
-        .header h1 { color: #2d8a4e; font-size: 24px; margin: 0; }
+        .header { border-bottom: 2px solid #B5A36B; padding-bottom: 16px; margin-bottom: 24px; }
+        .header h1 { color: #B5A36B; font-size: 24px; margin: 0; }
         .header p { color: #888; margin: 4px 0 0; }
         .meta { color: #888; font-size: 13px; margin-bottom: 20px; }
         .content { background: #141414; border: 1px solid #262626; border-radius: 8px; padding: 24px; line-height: 1.6; white-space: pre-wrap; }
