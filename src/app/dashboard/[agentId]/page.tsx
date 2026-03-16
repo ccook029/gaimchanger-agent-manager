@@ -41,11 +41,15 @@ export default function AgentDetailPage() {
   const handleRun = async () => {
     setRunning(true);
     try {
-      await fetch('/api/agents/run', {
+      const res = await fetch('/api/agents/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ agentId, sendEmail: false }),
       });
+      const data = await res.json();
+      if (data.log) {
+        setLogs((prev) => [data.log, ...prev.filter((l) => l.id !== data.log.id)]);
+      }
       await fetchLogs();
     } catch (err) {
       console.error('Failed to run agent:', err);

@@ -36,11 +36,15 @@ export default function DashboardPage() {
   const runAllAgents = async () => {
     setRunning(true);
     try {
-      await fetch('/api/agents/run', {
+      const res = await fetch('/api/agents/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sendEmail: false }),
       });
+      const data = await res.json();
+      if (data.logs) {
+        setLogs((prev) => [...data.logs, ...prev]);
+      }
       await fetchLogs();
     } catch (err) {
       console.error('Failed to run agents:', err);
@@ -51,11 +55,16 @@ export default function DashboardPage() {
   const runSingleAgent = async (agentId: string) => {
     setRunningAgent(agentId);
     try {
-      await fetch('/api/agents/run', {
+      const res = await fetch('/api/agents/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ agentId, sendEmail: false }),
       });
+      const data = await res.json();
+      // Use the log from the response directly (works even without KV)
+      if (data.log) {
+        setLogs((prev) => [data.log, ...prev.filter((l) => l.id !== data.log.id)]);
+      }
       await fetchLogs();
     } catch (err) {
       console.error('Failed to run agent:', err);
