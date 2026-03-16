@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { GaimchangerLogo, GaimchangerWordmark } from '@/components/gaimchanger-logo';
+import { GaimchangerLogoHorizontal } from '@/components/gaimchanger-logo';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -22,11 +22,8 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <Link href="/" className="flex items-center gap-3 group">
-                <GaimchangerLogo size={36} />
-                <div className="flex items-baseline gap-2">
-                  <GaimchangerWordmark className="text-xl" />
-                  <span className="text-neutral-600 text-xs font-medium tracking-widest uppercase">HQ</span>
-                </div>
+                <GaimchangerLogoHorizontal height={32} />
+                <span className="text-neutral-600 text-xs font-medium tracking-widest uppercase border-l border-neutral-700 pl-3 ml-1">HQ</span>
               </Link>
               <nav className="flex items-center gap-6">
                 <Link

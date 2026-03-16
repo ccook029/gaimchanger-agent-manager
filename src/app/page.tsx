@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getAllAgentConfigs } from '@/agents';
-import { GaimchangerLogo, GaimchangerWordmark } from '@/components/gaimchanger-logo';
+import { GaimchangerLogoStacked } from '@/components/gaimchanger-logo';
 
 const leadership = [
   {
@@ -36,12 +36,9 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#B5A36B]/5 to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative">
           <div className="text-center max-w-3xl mx-auto">
-            <div className="flex justify-center mb-8">
-              <GaimchangerLogo size={80} />
+            <div className="flex justify-center mb-10">
+              <GaimchangerLogoStacked height={160} />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold text-white mb-3">
-              <GaimchangerWordmark className="text-4xl sm:text-5xl" />
-            </h1>
             <p className="text-[#B5A36B] text-lg font-medium tracking-widest uppercase mb-6">Corporate Headquarters</p>
             <p className="text-lg text-neutral-400 leading-relaxed">
               The team behind Gaimchanger Golf. Each department is powered by an AI agent
