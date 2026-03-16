@@ -7,18 +7,60 @@ import { ShopifyOrder, ShopifyProduct, InventoryAlert } from './types';
 
 const API_VERSION = '2024-01';
 
-function getShopifyConfig() {
+function getStoreDomain(): string {
   const storeUrl = process.env.SHOPIFY_STORE_URL;
-  const accessToken = process.env.SHOPIFY_ACCESS_TOKEN;
-  if (!storeUrl || !accessToken) {
-    throw new Error('SHOPIFY_STORE_URL and SHOPIFY_ACCESS_TOKEN must be set');
+  if (!storeUrl) {
+    throw new Error('SHOPIFY_STORE_URL must be set');
   }
-  return { storeUrl, accessToken };
+  return storeUrl.includes('://') ? new URL(storeUrl).hostname : storeUrl;
+}
+
+/**
+ * Get an access token via client credentials grant (new Shopify flow as of Jan 2026).
+ * Falls back to static SHOPIFY_ACCESS_TOKEN if client credentials are not set.
+ */
+let _cachedToken: { token: string; expiresAt: number } | null = null;
+
+async function getAccessToken(): Promise<string> {
+  // Fall back to static token if set (legacy flow)
+  if (process.env.SHOPIFY_ACCESS_TOKEN) {
+    return process.env.SHOPIFY_ACCESS_TOKEN;
+  }
+
+  const clientId = process.env.SHOPIFY_CLIENT_ID;
+  const clientSecret = process.env.SHOPIFY_CLIENT_SECRET;
+  if (!clientId || !clientSecret) {
+    throw new Error('Either SHOPIFY_ACCESS_TOKEN or SHOPIFY_CLIENT_ID + SHOPIFY_CLIENT_SECRET must be set');
+  }
+
+  // Return cached token if still valid (with 5 min buffer)
+  if (_cachedToken && Date.now() < _cachedToken.expiresAt - 300000) {
+    return _cachedToken.token;
+  }
+
+  const domain = getStoreDomain();
+  const res = await fetch(`https://${domain}/admin/oauth/access_token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `grant_type=client_credentials&client_id=${clientId}&client_secret=${encodeURIComponent(clientSecret)}`,
+  });
+
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(`Shopify token exchange failed (${res.status}): ${error}`);
+  }
+
+  const data = await res.json();
+  _cachedToken = {
+    token: data.access_token,
+    expiresAt: Date.now() + (data.expires_in || 86399) * 1000,
+  };
+
+  return _cachedToken.token;
 }
 
 function getBaseUrl(): string {
-  const { storeUrl } = getShopifyConfig();
-  const domain = storeUrl.includes('://') ? new URL(storeUrl).hostname : storeUrl;
+  const domain = getStoreDomain();
   return `https://${domain}/admin/api/${API_VERSION}`;
 }
 
@@ -32,7 +74,7 @@ async function rateLimitedFetch(url: string, options: RequestInit): Promise<Resp
   }
   lastRequestTime = Date.now();
 
-  const { accessToken } = getShopifyConfig();
+  const accessToken = await getAccessToken();
   const res = await fetch(url, {
     ...options,
     headers: {
