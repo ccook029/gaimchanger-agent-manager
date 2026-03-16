@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { shopifyOperationsConfig } from '@/agents';
 import { runAgent } from '@/lib/agent-runner';
+
+export const maxDuration = 60;
+
 import {
   getOrders,
   getProducts,

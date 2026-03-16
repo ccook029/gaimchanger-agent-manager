@@ -3,6 +3,8 @@ import { getAgentConfig, getAllAgentConfigs } from '@/agents';
 import { runAgent } from '@/lib/agent-runner';
 import { runAllAgents } from '@/lib/orchestrator';
 
+export const maxDuration = 60;
+
 /**
  * POST /api/agents/run — Trigger single or all agents.
  * Body: { agentId?: string, sendEmail?: boolean }

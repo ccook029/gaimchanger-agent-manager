@@ -29,6 +29,7 @@ export interface AgentRunLog {
   outputTokens: number;
   report: string;
   error?: string;
+  emailError?: string;
 }
 
 export interface GA4Metric {

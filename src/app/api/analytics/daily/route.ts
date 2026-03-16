@@ -3,6 +3,8 @@ import { websiteAnalyticsConfig } from '@/agents';
 import { runAgent } from '@/lib/agent-runner';
 import { pullGA4Data } from '@/lib/ga4';
 
+export const maxDuration = 60;
+
 /**
  * GET /api/analytics/daily — Cron endpoint for daily analytics.
  * Schedule: 0 12 * * 1-5 (weekdays at noon UTC / 8 AM ET)

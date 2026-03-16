@@ -3,6 +3,8 @@ import { socialMediaConfig } from '@/agents';
 import { runAgent } from '@/lib/agent-runner';
 import { scanSocialMedia } from '@/lib/apify';
 
+export const maxDuration = 60;
+
 /**
  * GET /api/social/weekly — Monday Cron for weekly social intelligence.
  * Schedule: 0 10 * * 1 (Monday at 10 UTC / 6 AM ET)

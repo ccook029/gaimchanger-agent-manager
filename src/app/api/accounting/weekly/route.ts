@@ -3,6 +3,8 @@ import { accountingConfig } from '@/agents';
 import { runAgent } from '@/lib/agent-runner';
 import { getOrders, calculateSalesSummary } from '@/lib/shopify';
 
+export const maxDuration = 60;
+
 /**
  * GET /api/accounting/weekly — Monday Cron for weekly P&L.
  * Schedule: 0 12 * * 1 (Monday at noon UTC / 8 AM ET)

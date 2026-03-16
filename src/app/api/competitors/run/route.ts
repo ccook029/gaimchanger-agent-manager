@@ -3,6 +3,8 @@ import { competitorIntelConfig } from '@/agents';
 import { runAgent } from '@/lib/agent-runner';
 import { scanAllCompetitors } from '@/lib/competitors';
 
+export const maxDuration = 60;
+
 /**
  * POST /api/competitors/run — Manual trigger for competitor intel agent.
  */

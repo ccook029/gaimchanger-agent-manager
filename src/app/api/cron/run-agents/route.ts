@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { runAllAgents } from '@/lib/orchestrator';
 
+export const maxDuration = 60;
+
 /**
  * GET /api/cron/run-agents — Vercel Cron endpoint to run all agents.
  * Schedule: 0 12 * * * (daily at noon UTC)
