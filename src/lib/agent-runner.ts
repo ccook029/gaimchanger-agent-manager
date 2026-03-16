@@ -43,6 +43,20 @@ export async function runAgent(
     const completedAt = new Date().toISOString();
     const durationMs = Date.now() - startMs;
 
+    // Always generate PDF
+    let pdfBase64: string | undefined;
+    try {
+      const pdfBuffer = await generateReportPDF(
+        config.name,
+        config.title,
+        config.department,
+        response.content
+      );
+      pdfBase64 = Buffer.from(pdfBuffer).toString('base64');
+    } catch (err) {
+      console.error('PDF generation failed:', err);
+    }
+
     const log: AgentRunLog = {
       id: uuidv4(),
       agentId: config.id,
@@ -55,6 +69,7 @@ export async function runAgent(
       inputTokens: response.inputTokens,
       outputTokens: response.outputTokens,
       report: response.content,
+      pdfBase64,
     };
 
     // Store log
@@ -63,7 +78,7 @@ export async function runAgent(
     // Send email if requested (don't let email failure crash the run)
     if (options.sendEmailReport) {
       try {
-        await sendAgentEmail(config, response.content);
+        await sendAgentEmail(config, response.content, pdfBase64);
       } catch (emailError) {
         console.error(`Email delivery failed for ${config.name}:`, emailError);
         log.emailError = emailError instanceof Error ? emailError.message : String(emailError);
@@ -99,7 +114,7 @@ export async function runAgent(
 /**
  * Send agent report via email with PDF attachment.
  */
-async function sendAgentEmail(config: AgentConfig, report: string): Promise<void> {
+async function sendAgentEmail(config: AgentConfig, report: string, pdfBase64?: string): Promise<void> {
   const recipients = getDefaultRecipients();
   if (recipients.length === 0) return;
 
@@ -115,20 +130,8 @@ async function sendAgentEmail(config: AgentConfig, report: string): Promise<void
   const subjectPrefix = isUrgent ? '[URGENT] ' : '';
   const subject = `${subjectPrefix}${config.name} — ${config.title} Report | ${date}`;
 
-  // Generate PDF
-  let pdfBuffer: Buffer | null = null;
-  try {
-    pdfBuffer = await generateReportPDF(
-      config.name,
-      config.title,
-      config.department,
-      report
-    );
-  } catch (err) {
-    console.error('PDF generation failed, sending email without attachment:', err);
-  }
-
   const html = buildReportEmail(config.name, config.title, report, date);
+  const pdfBuffer = pdfBase64 ? Buffer.from(pdfBase64, 'base64') : null;
 
   await sendEmail({
     to: recipients,

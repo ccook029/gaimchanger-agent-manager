@@ -28,6 +28,7 @@ export interface AgentRunLog {
   inputTokens: number;
   outputTokens: number;
   report: string;
+  pdfBase64?: string;
   error?: string;
   emailError?: string;
 }
