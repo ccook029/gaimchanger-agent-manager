@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAgentConfig, getAllAgentConfigs } from '@/agents';
 import { runAgent } from '@/lib/agent-runner';
 import { runAllAgents } from '@/lib/orchestrator';
+import { fetchAgentVariables } from '@/lib/agent-data';
 
 export const maxDuration = 60;
 
@@ -28,7 +29,8 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const log = await runAgent(config, { sendEmailReport: sendEmail });
+      const variables = await fetchAgentVariables(agentId);
+      const log = await runAgent(config, { variables, sendEmailReport: sendEmail });
       return NextResponse.json({ success: true, log });
     }
 

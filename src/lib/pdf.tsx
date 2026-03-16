@@ -21,14 +21,14 @@ const styles = StyleSheet.create({
   },
   header: {
     borderBottomWidth: 2,
-    borderBottomColor: '#2d8a4e',
+    borderBottomColor: '#B5A36B',
     paddingBottom: 12,
     marginBottom: 20,
   },
   logo: {
     fontSize: 20,
     fontFamily: 'Helvetica-Bold',
-    color: '#2d8a4e',
+    color: '#B5A36B',
   },
   subtitle: {
     fontSize: 10,

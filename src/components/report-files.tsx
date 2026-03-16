@@ -81,12 +81,26 @@ export function ReportFiles({ logs }: ReportFilesProps) {
                 <ReportRenderer content={log.report} />
               )}
 
-              <div className="mt-4 pt-3 border-t border-neutral-800 flex gap-6 text-xs text-neutral-500">
-                <span>Status: {log.status}</span>
-                <span>Model: {log.model}</span>
-                <span>Duration: {(log.durationMs / 1000).toFixed(1)}s</span>
-                <span>Input: {log.inputTokens.toLocaleString()} tokens</span>
-                <span>Output: {log.outputTokens.toLocaleString()} tokens</span>
+              <div className="mt-4 pt-3 border-t border-neutral-800 flex items-center justify-between">
+                <div className="flex gap-6 text-xs text-neutral-500">
+                  <span>Status: {log.status}</span>
+                  <span>Model: {log.model}</span>
+                  <span>Duration: {(log.durationMs / 1000).toFixed(1)}s</span>
+                  <span>Input: {log.inputTokens.toLocaleString()} tokens</span>
+                  <span>Output: {log.outputTokens.toLocaleString()} tokens</span>
+                </div>
+                {log.pdfBase64 && (
+                  <a
+                    href={`/api/agents/pdf?logId=${log.id}`}
+                    download
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#B5A36B]/10 border border-[#B5A36B]/20 text-[#B5A36B] rounded-md text-xs font-medium hover:bg-[#B5A36B]/20 transition-colors"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Download PDF
+                  </a>
+                )}
               </div>
             </div>
           )}

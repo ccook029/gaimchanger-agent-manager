@@ -41,11 +41,15 @@ export default function AgentDetailPage() {
   const handleRun = async () => {
     setRunning(true);
     try {
-      await fetch('/api/agents/run', {
+      const res = await fetch('/api/agents/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ agentId, sendEmail: false }),
       });
+      const data = await res.json();
+      if (data.log) {
+        setLogs((prev) => [data.log, ...prev.filter((l) => l.id !== data.log.id)]);
+      }
       await fetchLogs();
     } catch (err) {
       console.error('Failed to run agent:', err);
@@ -62,7 +66,7 @@ export default function AgentDetailPage() {
         </p>
         <Link
           href="/dashboard"
-          className="text-[#2d8a4e] hover:text-[#3aa85e] transition-colors"
+          className="text-[#B5A36B] hover:text-[#3aa85e] transition-colors"
         >
           Back to Dashboard
         </Link>
@@ -121,7 +125,7 @@ export default function AgentDetailPage() {
         <button
           onClick={handleRun}
           disabled={running}
-          className="px-4 py-2 bg-[#2d8a4e] hover:bg-[#24713f] text-white rounded-lg font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="px-4 py-2 bg-[#B5A36B] hover:bg-[#C9BA88] text-black font-semibold rounded-lg text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
           {running ? (
             <>
@@ -175,7 +179,7 @@ export default function AgentDetailPage() {
             onClick={() => setActiveTab('history')}
             className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
               activeTab === 'history'
-                ? 'text-white border-[#2d8a4e]'
+                ? 'text-white border-[#B5A36B]'
                 : 'text-neutral-500 border-transparent hover:text-neutral-300'
             }`}
           >
@@ -185,7 +189,7 @@ export default function AgentDetailPage() {
             onClick={() => setActiveTab('files')}
             className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
               activeTab === 'files'
-                ? 'text-white border-[#2d8a4e]'
+                ? 'text-white border-[#B5A36B]'
                 : 'text-neutral-500 border-transparent hover:text-neutral-300'
             }`}
           >
@@ -197,11 +201,59 @@ export default function AgentDetailPage() {
       {/* Tab Content */}
       {activeTab === 'history' && <ReportFiles logs={logs} />}
       {activeTab === 'files' && (
-        <div className="text-center py-12 text-neutral-500">
-          <p>Report files will appear here after agents generate PDF reports.</p>
-          <p className="text-xs mt-2">
-            PDFs are attached to emails and stored per-run.
-          </p>
+        <div className="space-y-3">
+          {logs.filter((l) => l.pdfBase64).length === 0 ? (
+            <div className="text-center py-12 text-neutral-500">
+              <p>No PDF reports yet. Run the agent to generate a branded report.</p>
+            </div>
+          ) : (
+            logs
+              .filter((l) => l.pdfBase64)
+              .map((log) => {
+                const date = new Date(log.startedAt);
+                const filename = `${agent.id}-report-${date.toISOString().split('T')[0]}.pdf`;
+                return (
+                  <a
+                    key={log.id}
+                    href={`/api/agents/pdf?logId=${log.id}`}
+                    download
+                    className="flex items-center justify-between p-4 bg-neutral-900/50 border border-neutral-800 rounded-lg hover:border-[#B5A36B]/30 transition-colors group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-sm text-neutral-300 font-medium group-hover:text-[#B5A36B] transition-colors">
+                          {filename}
+                        </p>
+                        <p className="text-xs text-neutral-500">
+                          {date.toLocaleDateString('en-US', {
+                            weekday: 'short',
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })}{' '}
+                          at{' '}
+                          {date.toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-[#B5A36B]">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                      Download
+                    </div>
+                  </a>
+                );
+              })
+          )}
         </div>
       )}
 
