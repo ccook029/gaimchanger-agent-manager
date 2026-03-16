@@ -3,6 +3,8 @@ import { competitorIntelConfig } from '@/agents';
 import { runAgent } from '@/lib/agent-runner';
 import { scanAllCompetitors } from '@/lib/competitors';
 
+export const maxDuration = 60;
+
 /**
  * GET /api/competitors/weekly — Wednesday Cron for competitive intelligence.
  * Schedule: 0 12 * * 3 (Wednesday at noon UTC / 8 AM ET)

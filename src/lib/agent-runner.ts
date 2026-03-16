@@ -60,9 +60,14 @@ export async function runAgent(
     // Store log
     await addLog(log);
 
-    // Send email if requested
+    // Send email if requested (don't let email failure crash the run)
     if (options.sendEmailReport) {
-      await sendAgentEmail(config, response.content);
+      try {
+        await sendAgentEmail(config, response.content);
+      } catch (emailError) {
+        console.error(`Email delivery failed for ${config.name}:`, emailError);
+        log.emailError = emailError instanceof Error ? emailError.message : String(emailError);
+      }
     }
 
     return log;

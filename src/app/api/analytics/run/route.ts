@@ -3,6 +3,8 @@ import { websiteAnalyticsConfig } from '@/agents';
 import { runAgent } from '@/lib/agent-runner';
 import { pullGA4Data } from '@/lib/ga4';
 
+export const maxDuration = 60;
+
 /**
  * POST /api/analytics/run — Manual trigger for analytics agent.
  */

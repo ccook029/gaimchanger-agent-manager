@@ -3,6 +3,8 @@ import { accountingConfig } from '@/agents';
 import { runAgent } from '@/lib/agent-runner';
 import { getOrders, calculateSalesSummary } from '@/lib/shopify';
 
+export const maxDuration = 60;
+
 /**
  * POST /api/accounting/run — Manual trigger for accounting agent.
  */

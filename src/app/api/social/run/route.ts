@@ -3,6 +3,8 @@ import { socialMediaConfig } from '@/agents';
 import { runAgent } from '@/lib/agent-runner';
 import { scanSocialMedia } from '@/lib/apify';
 
+export const maxDuration = 60;
+
 /**
  * POST /api/social/run — Manual trigger for social media agent.
  */
