@@ -1,6 +1,8 @@
 /**
- * GA4 Data Pipeline — Pulls analytics from Google Analytics 4 via service account.
+ * GA4 Data Pipeline — Pulls analytics from Google Analytics 4 via OAuth2.
  */
+
+import { getAccessTokenFromRefresh } from './google-oauth';
 
 const GA4_METRICS = [
   'sessions',
@@ -34,51 +36,6 @@ interface GA4DataResult {
   comparisonRange: { start: string; end: string };
 }
 
-/**
- * Get Google access token from service account credentials.
- */
-async function getAccessToken(): Promise<string> {
-  const credsJson = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
-  if (!credsJson) {
-    throw new Error('GOOGLE_APPLICATION_CREDENTIALS_JSON not set');
-  }
-
-  const creds = JSON.parse(Buffer.from(credsJson, 'base64').toString());
-
-  // Build JWT for Google OAuth2
-  const now = Math.floor(Date.now() / 1000);
-  const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
-  const payload = Buffer.from(
-    JSON.stringify({
-      iss: creds.client_email,
-      scope: 'https://www.googleapis.com/auth/analytics.readonly',
-      aud: 'https://oauth2.googleapis.com/token',
-      iat: now,
-      exp: now + 3600,
-    })
-  ).toString('base64url');
-
-  // Sign with crypto
-  const crypto = await import('crypto');
-  const sign = crypto.createSign('RSA-SHA256');
-  sign.update(`${header}.${payload}`);
-  const signature = sign.sign(creds.private_key, 'base64url');
-
-  const jwt = `${header}.${payload}.${signature}`;
-
-  const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${jwt}`,
-  });
-
-  const tokenData = await tokenRes.json();
-  if (!tokenData.access_token) {
-    throw new Error(`Failed to get access token: ${JSON.stringify(tokenData)}`);
-  }
-
-  return tokenData.access_token;
-}
 
 /**
  * Run a GA4 report for a given date range and dimension.
@@ -192,7 +149,7 @@ export async function pullGA4Data(): Promise<{
     throw new Error('GA4_PROPERTY_ID not set');
   }
 
-  const accessToken = await getAccessToken();
+  const accessToken = await getAccessTokenFromRefresh();
   const ranges = getDateRanges();
 
   // Run all dimensions in parallel for both date ranges
