@@ -8,6 +8,7 @@ import { callClaude, substituteTemplate } from './anthropic';
 import { addLog } from './store';
 import { sendEmail, getDefaultRecipients, buildReportEmail } from './email';
 import { generateReportPDF } from './pdf';
+import { extractPlanFromReport, savePlan } from './marketing-plans';
 
 export interface RunOptions {
   variables?: Record<string, string>;
@@ -74,6 +75,18 @@ export async function runAgent(
 
     // Store log
     await addLog(log);
+
+    // Persist a draft marketing plan if the agent emitted a json-plan block
+    if (config.id === 'creative-strategy') {
+      try {
+        const plan = extractPlanFromReport(config.id, response.content);
+        if (plan) {
+          await savePlan(plan);
+        }
+      } catch (planErr) {
+        console.error('Failed to persist marketing plan:', planErr);
+      }
+    }
 
     // Send email if requested (don't let email failure crash the run)
     if (options.sendEmailReport) {

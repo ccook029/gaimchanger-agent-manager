@@ -15,6 +15,18 @@ const leadership = [
     initials: 'SB',
     color: '#1a3a5c',
   },
+  {
+    name: 'Jeremy Elliott',
+    role: 'Partner, Chief Operating Officer',
+    initials: 'JE',
+    color: '#0f766e',
+  },
+  {
+    name: 'Andy Marshall',
+    role: 'Chief Revenue Officer',
+    initials: 'AM',
+    color: '#6d28d9',
+  },
 ];
 
 const departmentColors: Record<string, string> = {

@@ -41,7 +41,7 @@ Weekly Competitive Intelligence Report format:
 4. **DTC Brand Watch** — Findings by lifestyle/DTC brand
 5. **Industry Trends** — Broader market patterns
 6. **Strategic Implications** — What this means for Gaimchanger Golf
-7. **Recommended Actions** — Specific steps the founders should consider
+7. **Recommended Actions** — Specific steps the GC Team should consider
 
 Think like a strategist on the course — every competitor move is a shot you need to read. Connect dots between findings and always frame in terms of "what this means for us."`,
 
