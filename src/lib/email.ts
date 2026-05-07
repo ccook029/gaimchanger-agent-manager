@@ -49,10 +49,15 @@ export async function sendEmail(options: EmailOptions): Promise<void> {
 
 /**
  * Get default recipient list from env.
+ * Entries prefixed with `#` are treated as commented-out and skipped,
+ * so addresses can be parked in EMAIL_TO without being delivered to.
  */
 export function getDefaultRecipients(): string[] {
   const emailTo = process.env.EMAIL_TO || '';
-  return emailTo.split(',').map((e) => e.trim()).filter(Boolean);
+  return emailTo
+    .split(',')
+    .map((e) => e.trim())
+    .filter((e) => e && !e.startsWith('#'));
 }
 
 /**
