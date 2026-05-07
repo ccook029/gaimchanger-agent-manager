@@ -23,7 +23,7 @@ const leadership = [
   },
   {
     name: 'Andy Marshall',
-    role: 'Partner, Chief Revenue Officer',
+    role: 'Chief Revenue Officer',
     initials: 'AM',
     color: '#6d28d9',
   },
