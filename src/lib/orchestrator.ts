@@ -4,6 +4,7 @@
 
 import { AgentRunLog } from './types';
 import { runAgent } from './agent-runner';
+import { fetchAgentVariables } from './agent-data';
 import { generateManagerSummary } from './manager';
 import { sendEmail, getDefaultRecipients, buildReportEmail } from './email';
 import { getAllAgentConfigs } from '../agents';
@@ -18,11 +19,12 @@ export async function runAllAgents(): Promise<{
   const configs = getAllAgentConfigs();
   const activeConfigs = configs.filter((c) => c.status === 'active');
 
-  // Run all agents in parallel
+  // Run all agents in parallel — each gets its own data variables
   const logs = await Promise.all(
-    activeConfigs.map((config) =>
-      runAgent(config, { sendEmailReport: true })
-    )
+    activeConfigs.map(async (config) => {
+      const variables = await fetchAgentVariables(config.id);
+      return runAgent(config, { variables, sendEmailReport: true });
+    })
   );
 
   // Generate manager summary
