@@ -163,18 +163,60 @@ function mapFormatToMediaType(format: MarketingPlanItem['format']): string {
   }
 }
 
+/**
+ * Format a brief that Predis's content-gen pipeline can interpret cleanly.
+ * Predis works best with a directive, structured prompt: explicit visual,
+ * verbatim caption, hashtags on their own line. Vague language ("vibey,"
+ * "aesthetic") confuses the renderer.
+ */
 function buildBrief(item: MarketingPlanItem): string {
-  const parts = [
-    `Theme: ${item.theme}`,
-    `Format: ${item.format}`,
-    `Hook: ${item.hook}`,
-    `Caption: ${item.caption}`,
-    `Visual concept: ${item.visualConcept}`,
-  ];
+  const platformLabel =
+    item.platform.charAt(0).toUpperCase() + item.platform.slice(1);
+  const formatLabel = item.format.charAt(0).toUpperCase() + item.format.slice(1);
+
+  const lines: string[] = [];
+  lines.push(`Create a ${formatLabel} for ${platformLabel}.`);
+  lines.push('');
+  lines.push(`THEME: ${item.theme}`);
+  lines.push('');
+  lines.push(`HOOK (open with this): ${item.hook}`);
+  lines.push('');
+  lines.push(`VISUAL DESCRIPTION (render this exactly):`);
+  lines.push(item.visualConcept);
+  lines.push('');
+  lines.push(`CAPTION (use verbatim, do not rewrite):`);
+  lines.push(item.caption);
   if (item.hashtags.length) {
-    parts.push(`Hashtags: ${item.hashtags.join(' ')}`);
+    lines.push('');
+    lines.push(`HASHTAGS (append to caption):`);
+    lines.push(item.hashtags.join(' '));
   }
-  return parts.join('\n');
+  return lines.join('\n');
+}
+
+/**
+ * Validate a plan item is shaped well enough to send to Predis.
+ * Returns an array of error messages — empty array means valid.
+ */
+export function validatePlanItem(item: MarketingPlanItem): string[] {
+  const errors: string[] = [];
+  if (!item.date || !/^\d{4}-\d{2}-\d{2}$/.test(item.date)) {
+    errors.push(`date must be YYYY-MM-DD (got "${item.date}")`);
+  }
+  if (!item.postTime) errors.push('postTime is empty');
+  if (!['instagram', 'facebook', 'tiktok'].includes(item.platform)) {
+    errors.push(`platform must be instagram/facebook/tiktok (got "${item.platform}")`);
+  }
+  if (!['reel', 'carousel', 'static', 'story', 'video'].includes(item.format)) {
+    errors.push(`format invalid (got "${item.format}")`);
+  }
+  if (!item.caption || item.caption.length < 10) {
+    errors.push('caption too short — Predis needs at least 10 chars');
+  }
+  if (!item.visualConcept || item.visualConcept.length < 20) {
+    errors.push('visualConcept too short — needs at least 20 chars');
+  }
+  return errors;
 }
 
 function combineDateAndTime(date: string, time: string): string {

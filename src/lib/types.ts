@@ -156,3 +156,18 @@ export interface MarketingPlan {
   items: MarketingPlanItem[];
   rawReport: string;
 }
+
+export type ChatRole = 'user' | 'assistant';
+
+export interface ChatMessage {
+  role: ChatRole;
+  content: string;
+  timestamp: string;
+}
+
+export interface BryceConversation {
+  messages: ChatMessage[];
+  intelSnapshot: string;
+  intelTakenAt: string | null;
+  updatedAt: string;
+}

@@ -4,7 +4,7 @@ import {
   savePlan,
   updatePlanStatus,
 } from '@/lib/marketing-plans';
-import { createPostFromBrief } from '@/lib/predis';
+import { createPostFromBrief, validatePlanItem } from '@/lib/predis';
 import { MarketingPlanItem } from '@/lib/types';
 
 export const maxDuration = 60;
@@ -39,6 +39,16 @@ export async function POST(
 
   const updatedItems: MarketingPlanItem[] = [];
   for (const item of existing.items) {
+    const validationErrors = validatePlanItem(item);
+    if (validationErrors.length > 0) {
+      updatedItems.push({
+        ...item,
+        predisStatus: 'error',
+        predisError: `Validation failed: ${validationErrors.join('; ')}`,
+      });
+      continue;
+    }
+
     try {
       const result = await createPostFromBrief(item);
       updatedItems.push({

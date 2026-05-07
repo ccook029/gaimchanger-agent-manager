@@ -68,3 +68,40 @@ export async function callClaude(request: ClaudeRequest): Promise<ClaudeResponse
     model,
   };
 }
+
+export interface ClaudeMessagesRequest {
+  systemPrompt: string;
+  messages: { role: 'user' | 'assistant'; content: string }[];
+  model?: string;
+  maxTokens?: number;
+  temperature?: number;
+}
+
+/**
+ * Call Claude with a multi-turn message history (for chat).
+ */
+export async function callClaudeMessages(
+  request: ClaudeMessagesRequest
+): Promise<ClaudeResponse> {
+  const model = request.model || 'claude-sonnet-4-20250514';
+  const maxTokens = request.maxTokens || 4096;
+  const temperature = request.temperature ?? 0.6;
+
+  const response = await getClient().messages.create({
+    model,
+    max_tokens: maxTokens,
+    temperature,
+    system: request.systemPrompt,
+    messages: request.messages,
+  });
+
+  const textContent = response.content.find((c) => c.type === 'text');
+  const content = textContent ? textContent.text : '';
+
+  return {
+    content,
+    inputTokens: response.usage.input_tokens,
+    outputTokens: response.usage.output_tokens,
+    model,
+  };
+}
