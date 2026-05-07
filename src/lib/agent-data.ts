@@ -3,6 +3,8 @@
  */
 
 import { scanAllCompetitors } from './competitors';
+import { pullGA4Data } from './ga4';
+import { scanSocialMedia } from './apify';
 import {
   getOrders,
   getProducts,
@@ -41,11 +43,35 @@ export async function fetchAgentVariables(
       return { date, reportType: 'weekly P&L', financialData, cogsData: 'COGS data not yet configured. Use estimated margins.' };
     }
 
-    case 'website-analytics':
-      return { date, ga4Data: 'GA4 data not yet configured. Provide a general status update based on your knowledge.' };
+    case 'website-analytics': {
+      try {
+        const { markdown } = await pullGA4Data();
+        return { date, ga4Data: markdown };
+      } catch (error) {
+        console.error('GA4 data fetch failed:', error);
+        return {
+          date,
+          ga4Data: `GA4 data fetch failed: ${
+            error instanceof Error ? error.message : 'Unknown error'
+          }. Check GA4_PROPERTY_ID and GOOGLE_APPLICATION_CREDENTIALS_JSON env vars.`,
+        };
+      }
+    }
 
-    case 'social-media':
-      return { date, socialData: 'Social media data not yet configured.' };
+    case 'social-media': {
+      try {
+        const socialData = await scanSocialMedia();
+        return { date, socialData };
+      } catch (error) {
+        console.error('Social media scan failed:', error);
+        return {
+          date,
+          socialData: `Social media scan failed: ${
+            error instanceof Error ? error.message : 'Unknown error'
+          }. Check APIFY_API_KEY env var.`,
+        };
+      }
+    }
 
     default:
       return { date };
