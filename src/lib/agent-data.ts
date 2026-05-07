@@ -5,6 +5,7 @@
 import { scanAllCompetitors } from './competitors';
 import { pullGA4Data } from './ga4';
 import { scanSocialMedia } from './apify';
+import { getLatestLogByAgent } from './store';
 import {
   getOrders,
   getProducts,
@@ -71,6 +72,15 @@ export async function fetchAgentVariables(
           }. Check APIFY_API_KEY env var.`,
         };
       }
+    }
+
+    case 'creative-strategy': {
+      const latest = await getLatestLogByAgent('social-media');
+      const intel =
+        latest && latest.status === 'success' && latest.report
+          ? latest.report
+          : 'No recent intel from Sloane Signal. Run her first (dashboard → Sloane Signal → Run Now), then run this agent again.';
+      return { date, intel };
     }
 
     default:

@@ -123,7 +123,7 @@ export default function AgentDetailPage() {
         </div>
 
         <div className="flex gap-2">
-          {agentId === 'social-media' && (
+          {agentId === 'creative-strategy' && (
             <Link
               href="/dashboard/social-media/plans"
               className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white font-semibold rounded-lg text-sm transition-colors flex items-center gap-2"

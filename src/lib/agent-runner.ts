@@ -77,7 +77,7 @@ export async function runAgent(
     await addLog(log);
 
     // Persist a draft marketing plan if the agent emitted a json-plan block
-    if (config.id === 'social-media') {
+    if (config.id === 'creative-strategy') {
       try {
         const plan = extractPlanFromReport(config.id, response.content);
         if (plan) {
