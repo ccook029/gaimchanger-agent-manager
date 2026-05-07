@@ -40,7 +40,7 @@ MONTHLY CLOSE format (1st of month):
 11. **Top Revenue Products** — Revenue drivers
 12. **Seasonal Outlook** — What to expect next month
 
-Reports go to founders only. Be precise with dollar amounts.`,
+Reports go to the GC Team. Be precise with dollar amounts.`,
 
   userPromptTemplate: `Today is {{date}}. Report type: {{reportType}}.
 
