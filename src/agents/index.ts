@@ -4,6 +4,7 @@ import { shopifyOperationsConfig } from './shopify-operations-agent.config';
 import { accountingConfig } from './accounting-agent.config';
 import { socialMediaConfig } from './social-media-agent.config';
 import { competitorIntelConfig } from './competitor-intel-agent.config';
+import { contentMarketingConfig } from './content-marketing-agent.config';
 
 const agentConfigs: AgentConfig[] = [
   websiteAnalyticsConfig,
@@ -11,6 +12,7 @@ const agentConfigs: AgentConfig[] = [
   accountingConfig,
   socialMediaConfig,
   competitorIntelConfig,
+  contentMarketingConfig,
 ];
 
 export function getAllAgentConfigs(): AgentConfig[] {
@@ -27,4 +29,5 @@ export {
   accountingConfig,
   socialMediaConfig,
   competitorIntelConfig,
+  contentMarketingConfig,
 };

@@ -11,6 +11,7 @@ import {
   identifyDeadStock,
   formatShopifyDataAsMarkdown,
 } from './shopify';
+import { fetchContentMarketingData } from './content-marketing';
 
 /**
  * Fetch the required variables for a given agent before running it.
@@ -46,6 +47,19 @@ export async function fetchAgentVariables(
 
     case 'social-media':
       return { date, socialData: 'Social media data not yet configured.' };
+
+    case 'content-marketing': {
+      const cmData = await fetchContentMarketingData();
+      return {
+        date,
+        productData: cmData.productData,
+        topSellers: cmData.topSellers,
+        competitorTrends: cmData.competitorTrends,
+        batchId: cmData.batchId,
+        angles: cmData.angles,
+        seasonalNotes: cmData.seasonalNotes,
+      };
+    }
 
     default:
       return { date };
