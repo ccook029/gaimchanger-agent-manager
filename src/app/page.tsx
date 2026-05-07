@@ -11,13 +11,13 @@ const leadership = [
   },
   {
     name: 'Steve Bennedetti',
-    role: 'Chief Brand & Partnerships Officer',
+    role: 'Chief of Big City',
     initials: 'SB',
     color: '#1a3a5c',
   },
   {
     name: 'Jeremy Elliott',
-    role: 'Partner, Chief Operating Officer',
+    role: 'Chief Operating Officer',
     initials: 'JE',
     color: '#0f766e',
   },
