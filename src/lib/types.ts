@@ -107,3 +107,52 @@ export interface SocialMetrics {
   followers?: number;
   topContent?: string;
 }
+
+export type PlatformId = 'instagram' | 'facebook' | 'tiktok';
+export type PostFormat = 'reel' | 'carousel' | 'static' | 'story' | 'video';
+
+export type PredisItemStatus =
+  | 'pending'
+  | 'generating'
+  | 'ready'
+  | 'scheduled'
+  | 'published'
+  | 'error';
+
+export interface MarketingPlanItem {
+  id: string;
+  date: string;
+  postTime: string;
+  platform: PlatformId;
+  format: PostFormat;
+  theme: string;
+  hook: string;
+  caption: string;
+  visualConcept: string;
+  hashtags: string[];
+  predisStatus?: PredisItemStatus;
+  predisPostId?: string;
+  predisError?: string;
+  predisPreviewUrl?: string;
+}
+
+export type MarketingPlanStatus =
+  | 'draft'
+  | 'approved'
+  | 'rejected'
+  | 'in-progress'
+  | 'completed';
+
+export interface MarketingPlan {
+  id: string;
+  agentId: string;
+  status: MarketingPlanStatus;
+  createdAt: string;
+  approvedAt?: string;
+  rejectedAt?: string;
+  weekOf: string;
+  goals: { metric: string; target: string }[];
+  themes: string[];
+  items: MarketingPlanItem[];
+  rawReport: string;
+}
