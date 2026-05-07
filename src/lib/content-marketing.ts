@@ -9,9 +9,9 @@ const MARKETING_ANGLES = ['A', 'B', 'C'] as const;
 type Angle = (typeof MARKETING_ANGLES)[number];
 
 const ANGLE_LABELS: Record<Angle, string> = {
-  A: 'Lifestyle & Aspiration',
-  B: 'Product & Feature Focus',
-  C: 'Education & Tips',
+  A: "You're Terrible at Golf (Pain Point / Humor)",
+  B: 'See Your Impact (Product Demo / Education)',
+  C: 'Save Money on Golf Balls (Value / Cost Savings)',
 };
 
 export function generateBatchId(): string {
