@@ -119,8 +119,8 @@ export default function BryceChatPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col" style={{ minHeight: 'calc(100vh - 4rem)' }}>
-      {/* Sticky breadcrumb + header — stays visible while chat scrolls */}
-      <div className="sticky top-0 z-20 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 pt-4 pb-4 bg-black/85 backdrop-blur border-b border-neutral-900">
+      {/* Sticky breadcrumb + header — stays visible (below the global h-16 nav) while chat scrolls */}
+      <div className="sticky top-16 z-20 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 pt-4 pb-4 bg-black/85 backdrop-blur border-b border-neutral-900">
         <div className="flex items-center gap-2 text-sm text-neutral-500 mb-4">
           <Link href="/dashboard" className="hover:text-white transition-colors">
             Dashboard
