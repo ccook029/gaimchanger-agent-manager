@@ -64,6 +64,24 @@ export default function BryceChatPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message }),
       });
+
+      // Surface non-2xx responses with whatever body the server returned
+      if (!res.ok) {
+        let detail = `${res.status} ${res.statusText}`;
+        try {
+          const errBody = await res.json();
+          if (errBody?.error) detail = errBody.error;
+        } catch {
+          // Body wasn't JSON (e.g. Vercel timeout HTML). Fall back to status text.
+          if (res.status === 504) {
+            detail =
+              'Bryce took too long to reply (Vercel function timeout). If you asked him to produce the full plan, try splitting it: "draft the brief now" then in a second message "now emit the json-plan."';
+          }
+        }
+        alert(`Send failed: ${detail}`);
+        return;
+      }
+
       const data = await res.json();
       if (data.conversation) {
         setConversation(data.conversation);
@@ -76,7 +94,11 @@ export default function BryceChatPage() {
       }
     } catch (err) {
       console.error('Send failed:', err);
-      alert('Send failed — check console.');
+      alert(
+        `Send failed — ${
+          err instanceof Error ? err.message : 'unknown error'
+        }. Check browser console for details.`
+      );
     } finally {
       setSending(false);
       textareaRef.current?.focus();
