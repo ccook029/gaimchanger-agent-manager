@@ -9,7 +9,7 @@ import {
 import { extractPlanFromReport, savePlan } from '@/lib/marketing-plans';
 import { fetchAgentVariables } from '@/lib/agent-data';
 
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 /**
  * POST /api/agents/creative-strategy/chat — send a message to Bryce and
