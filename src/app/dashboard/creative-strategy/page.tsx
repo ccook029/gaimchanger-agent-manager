@@ -11,7 +11,6 @@ export default function BryceChatPage() {
   const [conversation, setConversation] = useState<BryceConversation | null>(null);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
-  const [resetting, setResetting] = useState(false);
   const [lastSavedPlanId, setLastSavedPlanId] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -108,19 +107,6 @@ export default function BryceChatPage() {
     }
   };
 
-  const handleReset = async () => {
-    if (!confirm('Reset the conversation? Sloane\'s latest intel will be re-snapshotted.')) return;
-    setResetting(true);
-    try {
-      const res = await fetch('/api/agents/creative-strategy/reset', { method: 'POST' });
-      const data = await res.json();
-      setConversation(data.conversation || null);
-      setLastSavedPlanId(null);
-    } finally {
-      setResetting(false);
-    }
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -165,13 +151,6 @@ export default function BryceChatPage() {
           >
             Plans
           </Link>
-          <button
-            onClick={handleReset}
-            disabled={resetting || sending}
-            className="px-3 py-2 bg-neutral-800 hover:bg-neutral-700 disabled:bg-neutral-900 text-white text-sm font-semibold rounded-lg transition-colors"
-          >
-            {resetting ? 'Resetting…' : 'Reset chat'}
-          </button>
         </div>
       </div>
 
