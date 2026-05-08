@@ -37,14 +37,14 @@ export default function MarketingPlansPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <Link
-            href="/dashboard/social-media"
+            href="/dashboard/creative-strategy"
             className="text-sm text-[#B5A36B] hover:text-[#C9BA88] mb-2 inline-block"
           >
-            ← Back to Sloane Signal
+            ← Back to Bryce Studio
           </Link>
           <h1 className="text-3xl font-bold text-white">Marketing Plans</h1>
           <p className="text-neutral-400 mt-1">
-            Review Sloane&apos;s drafts. Approve to ship to Predis for content generation.
+            Review Bryce&apos;s drafts. Approve to ship to Predis for content generation.
           </p>
         </div>
       </div>
