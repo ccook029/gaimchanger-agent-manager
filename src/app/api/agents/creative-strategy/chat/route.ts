@@ -42,12 +42,12 @@ export async function POST(request: NextRequest) {
 
   const convo = await loadConversation();
 
-  // Build system prompt with the snapshotted intel as context
+  // Build system prompt — Sloane's intel is background reference only, NOT plan input
   const systemPrompt = `${bryceStudioConfig.systemPrompt}
 
 ---
 
-CURRENT INTEL FROM SLOANE SIGNAL (snapshotted ${convo.intelTakenAt ? new Date(convo.intelTakenAt).toLocaleString() : 'just now'}):
+REFERENCE: SLOANE SIGNAL'S MOST RECENT INTEL (snapshotted ${convo.intelTakenAt ? new Date(convo.intelTakenAt).toLocaleString() : 'just now'}):
 
 ${convo.intelSnapshot}
 
@@ -56,9 +56,19 @@ ${convo.intelSnapshot}
 CONVERSATION RULES:
 - This is a back-and-forth strategy chat with the GC Team.
 - Stay focused on creative strategy, content angles, and refining the marketing plan.
+- Keep replies focused and under ~250 words unless they ask for more depth.
+- Push back when warranted. If the GC Team's idea has a creative or strategic flaw, say so directly with reasoning. Don't be a yes-man.
+
+HOW TO USE SLOANE'S INTEL:
+- Sloane's intel is reference material only. You may cite it during discussion when helpful (e.g. "Sloane noted Reels are outperforming carousels 3:1 — want to lean in?").
+- You may NOT use Sloane's intel as a source for plan content. Themes, hooks, captions, visual concepts, posting schedule — all of it must come from what the GC Team and you have explicitly discussed and agreed on in THIS conversation.
+
+PLAN PRODUCTION RULES:
 - When the GC Team asks you to produce the final plan (e.g. "create the plan", "generate it", "lock it in"), output the markdown brief followed by the json-plan code block per your normal format.
-- If the GC Team is still discussing direction, do NOT emit a json-plan block — just engage with the strategy conversation. Keep replies focused and under ~250 words unless they ask for more depth.
-- Push back when warranted. If the GC Team's idea has a creative or strategic flaw, say so directly with reasoning. Don't be a yes-man.`;
+- The plan MUST be a faithful execution of what we agreed on in this chat. Every theme, hook, caption, and visual concept must trace back to something the GC Team and you discussed.
+- If you find you're filling gaps with material we never discussed, STOP. Instead, reply with a short list of the open questions you need answered before you can produce the plan, and wait for the GC Team to clarify.
+- If we discussed direction but didn't agree on enough specifics for a full plan, ask before producing.
+- If the GC Team is still discussing direction, do NOT emit a json-plan block — just engage with the strategy conversation.`;
 
   try {
     const response = await callClaudeMessages({
