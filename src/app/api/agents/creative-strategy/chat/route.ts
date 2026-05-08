@@ -67,6 +67,7 @@ CONVERSATION RULES:
       model: bryceStudioConfig.model,
       maxTokens: bryceStudioConfig.maxTokens,
       temperature: bryceStudioConfig.temperature,
+      enableWebTools: true,
     });
 
     const updatedConvo = await appendMessage({

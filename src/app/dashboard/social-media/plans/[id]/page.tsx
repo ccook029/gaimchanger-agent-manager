@@ -127,6 +127,12 @@ export default function PlanDetailPage() {
         </div>
 
         <div className="flex gap-2">
+          <a
+            href={`/api/social/plans/${id}/pdf`}
+            className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white font-semibold rounded-lg transition-colors flex items-center gap-2"
+          >
+            Download PDF
+          </a>
           {canApprove && (
             <>
               <button
