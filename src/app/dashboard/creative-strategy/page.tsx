@@ -89,6 +89,9 @@ export default function BryceChatPage() {
       if (data.savedPlanId) {
         setLastSavedPlanId(data.savedPlanId);
       }
+      if (data.planExtractionNote) {
+        alert(`Plan not saved: ${data.planExtractionNote}`);
+      }
       if (data.error) {
         alert(`Bryce errored: ${data.error}`);
       }

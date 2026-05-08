@@ -77,13 +77,21 @@ CONVERSATION RULES:
 
     // If Bryce produced a json-plan in this reply, save as draft
     let savedPlanId: string | undefined;
+    let planExtractionNote: string | undefined;
     try {
+      const hasFence = /```json-plan/.test(response.content);
       const plan = extractPlanFromReport('creative-strategy', response.content);
       if (plan) {
         await savePlan(plan);
         savedPlanId = plan.id;
+      } else if (hasFence) {
+        planExtractionNote =
+          'Bryce included a json-plan code block but it failed to parse — check the raw reply for malformed JSON.';
       }
     } catch (planErr) {
+      planExtractionNote = `Plan extraction threw: ${
+        planErr instanceof Error ? planErr.message : String(planErr)
+      }`;
       console.error('Failed to extract plan from chat reply:', planErr);
     }
 
@@ -91,6 +99,7 @@ CONVERSATION RULES:
       conversation: updatedConvo,
       reply: response.content,
       savedPlanId,
+      planExtractionNote,
     });
   } catch (error) {
     return NextResponse.json(
