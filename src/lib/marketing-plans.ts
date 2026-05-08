@@ -66,6 +66,26 @@ export async function savePlan(plan: MarketingPlan): Promise<void> {
   }
 }
 
+export async function deletePlan(id: string): Promise<boolean> {
+  const redis = getRedis();
+  if (!redis) {
+    const before = memoryStore.length;
+    memoryStore = memoryStore.filter((p) => p.id !== id);
+    return memoryStore.length < before;
+  }
+  try {
+    const plans = await listPlans();
+    const filtered = plans.filter((p) => p.id !== id);
+    if (filtered.length === plans.length) return false;
+    await redis.set(PLANS_KEY, filtered);
+    return true;
+  } catch {
+    const before = memoryStore.length;
+    memoryStore = memoryStore.filter((p) => p.id !== id);
+    return memoryStore.length < before;
+  }
+}
+
 export async function updatePlanStatus(
   id: string,
   status: MarketingPlanStatus,

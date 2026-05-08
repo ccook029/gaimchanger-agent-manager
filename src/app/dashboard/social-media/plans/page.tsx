@@ -15,6 +15,7 @@ const statusColors: Record<string, string> = {
 export default function MarketingPlansPage() {
   const [plans, setPlans] = useState<MarketingPlan[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchPlans = useCallback(async () => {
     try {
@@ -31,6 +32,24 @@ export default function MarketingPlansPage() {
   useEffect(() => {
     fetchPlans();
   }, [fetchPlans]);
+
+  const handleDelete = async (id: string, weekOf: string) => {
+    if (!confirm(`Delete the plan for Week of ${weekOf}? This can't be undone.`)) {
+      return;
+    }
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/social/plans/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setPlans((prev) => prev.filter((p) => p.id !== id));
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(`Delete failed: ${data.error || res.statusText}`);
+      }
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -61,12 +80,16 @@ export default function MarketingPlansPage() {
       ) : (
         <div className="space-y-4">
           {plans.map((plan) => (
-            <Link
+            <div
               key={plan.id}
-              href={`/dashboard/social-media/plans/${plan.id}`}
-              className="block bg-neutral-900/50 border border-neutral-800 rounded-xl p-6 hover:border-[#B5A36B]/50 hover:bg-neutral-900 transition-all"
+              className="relative bg-neutral-900/50 border border-neutral-800 rounded-xl p-6 hover:border-[#B5A36B]/50 hover:bg-neutral-900 transition-all"
             >
-              <div className="flex items-start justify-between gap-4">
+              <Link
+                href={`/dashboard/social-media/plans/${plan.id}`}
+                className="absolute inset-0 rounded-xl"
+                aria-label={`Open plan for week of ${plan.weekOf}`}
+              />
+              <div className="relative flex items-start justify-between gap-4 pointer-events-none">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h2 className="text-lg font-semibold text-white">
@@ -95,14 +118,27 @@ export default function MarketingPlansPage() {
                     ))}
                   </div>
                 </div>
-                <div className="text-right shrink-0">
-                  <div className="text-2xl font-bold text-white">
-                    {plan.items.length}
+                <div className="flex items-start gap-4 shrink-0 pointer-events-auto">
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-white">
+                      {plan.items.length}
+                    </div>
+                    <div className="text-xs text-neutral-500">posts</div>
                   </div>
-                  <div className="text-xs text-neutral-500">posts</div>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleDelete(plan.id, plan.weekOf);
+                    }}
+                    disabled={deletingId === plan.id}
+                    className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-500/10 hover:bg-red-500/20 disabled:bg-neutral-800 text-red-400 border border-red-500/20 transition-colors"
+                  >
+                    {deletingId === plan.id ? 'Deleting…' : 'Delete'}
+                  </button>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}
