@@ -119,40 +119,42 @@ export default function BryceChatPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col" style={{ minHeight: 'calc(100vh - 4rem)' }}>
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-neutral-500 mb-6">
-        <Link href="/dashboard" className="hover:text-white transition-colors">
-          Dashboard
-        </Link>
-        <span>/</span>
-        <span className="text-neutral-300">{agent.name}</span>
-      </div>
-
-      {/* Header */}
-      <div className="flex items-start justify-between mb-6 gap-4">
-        <div className="flex items-start gap-4 min-w-0">
-          <div
-            className="w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-lg shrink-0"
-            style={{ backgroundColor: agent.avatar.color }}
-          >
-            {agent.avatar.initials}
-          </div>
-          <div className="min-w-0">
-            <h1 className="text-2xl font-bold text-white">{agent.name}</h1>
-            <p className="text-neutral-400 text-sm">{agent.title}</p>
-            <p className="text-neutral-500 text-xs mt-1">{agent.bio}</p>
-          </div>
-        </div>
-
-        <div className="flex gap-2 shrink-0">
-          <Link
-            href="/dashboard/social-media/plans"
-            className="px-3 py-2 bg-neutral-800 hover:bg-neutral-700 text-white text-sm font-semibold rounded-lg transition-colors"
-          >
-            Plans
+      {/* Sticky breadcrumb + header — stays visible while chat scrolls */}
+      <div className="sticky top-0 z-20 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 pt-4 pb-4 bg-black/85 backdrop-blur border-b border-neutral-900">
+        <div className="flex items-center gap-2 text-sm text-neutral-500 mb-4">
+          <Link href="/dashboard" className="hover:text-white transition-colors">
+            Dashboard
           </Link>
+          <span>/</span>
+          <span className="text-neutral-300">{agent.name}</span>
+        </div>
+
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-4 min-w-0">
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-base shrink-0"
+              style={{ backgroundColor: agent.avatar.color }}
+            >
+              {agent.avatar.initials}
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-xl font-bold text-white leading-tight">{agent.name}</h1>
+              <p className="text-neutral-400 text-sm">{agent.title}</p>
+            </div>
+          </div>
+
+          <div className="flex gap-2 shrink-0">
+            <Link
+              href="/dashboard/social-media/plans"
+              className="px-3 py-2 bg-neutral-800 hover:bg-neutral-700 text-white text-sm font-semibold rounded-lg transition-colors"
+            >
+              Plans
+            </Link>
+          </div>
         </div>
       </div>
+
+      <div className="h-6" />
 
       {/* Intel snapshot */}
       {intelSnapshot && (
