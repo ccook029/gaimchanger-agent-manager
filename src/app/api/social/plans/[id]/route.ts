@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPlan } from '@/lib/marketing-plans';
+import { deletePlan, getPlan } from '@/lib/marketing-plans';
 
 export const maxDuration = 30;
 
@@ -16,4 +16,19 @@ export async function GET(
     return NextResponse.json({ error: 'Plan not found' }, { status: 404 });
   }
   return NextResponse.json({ plan });
+}
+
+/**
+ * DELETE /api/social/plans/[id] — remove a plan permanently.
+ */
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const removed = await deletePlan(id);
+  if (!removed) {
+    return NextResponse.json({ error: 'Plan not found' }, { status: 404 });
+  }
+  return NextResponse.json({ success: true });
 }
