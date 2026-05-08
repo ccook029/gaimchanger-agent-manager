@@ -14,15 +14,17 @@ export function GaimchangerLogoHorizontal({
   className?: string;
 }) {
   return (
-    <Image
-      src="/GAIM CHANGER LOGO-Transparent-02.png"
-      alt="Gaimchanger Golf"
-      width={Math.round(height * 5.5)}
-      height={height}
-      className={className}
-      style={{ filter: 'brightness(1.5) saturate(1.1)' }}
-      priority
-    />
+    <div
+      className={`inline-flex items-center bg-white rounded-md px-3 py-1.5 ${className}`}
+    >
+      <Image
+        src="/GAIM CHANGER LOGO-Transparent-02.png"
+        alt="Gaimchanger Golf"
+        width={Math.round(height * 5.5)}
+        height={height}
+        priority
+      />
+    </div>
   );
 }
 
@@ -34,14 +36,16 @@ export function GaimchangerLogoStacked({
   className?: string;
 }) {
   return (
-    <Image
-      src="/GAIM CHANGER LOGO-Transparent-03.png"
-      alt="Gaimchanger Golf"
-      width={Math.round(height * 1.4)}
-      height={height}
-      className={className}
-      style={{ filter: 'brightness(1.3) saturate(1.05)' }}
-      priority
-    />
+    <div
+      className={`inline-flex items-center bg-white rounded-xl px-6 py-4 shadow-lg shadow-[#B5A36B]/10 ${className}`}
+    >
+      <Image
+        src="/GAIM CHANGER LOGO-Transparent-03.png"
+        alt="Gaimchanger Golf"
+        width={Math.round(height * 1.4)}
+        height={height}
+        priority
+      />
+    </div>
   );
 }
