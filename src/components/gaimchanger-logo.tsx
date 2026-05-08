@@ -20,6 +20,7 @@ export function GaimchangerLogoHorizontal({
       width={Math.round(height * 5.5)}
       height={height}
       className={className}
+      style={{ filter: 'brightness(1.5) saturate(1.1)' }}
       priority
     />
   );
@@ -39,6 +40,7 @@ export function GaimchangerLogoStacked({
       width={Math.round(height * 1.4)}
       height={height}
       className={className}
+      style={{ filter: 'brightness(1.3) saturate(1.05)' }}
       priority
     />
   );
