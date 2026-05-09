@@ -16,7 +16,15 @@ const PREDIS_BASE =
 function getApiKey(): string {
   const key = process.env.PREDIS_API_KEY;
   if (!key) throw new Error('PREDIS_API_KEY not set');
-  return key;
+  return key.trim();
+}
+
+function getAuthHeader(): string {
+  const key = getApiKey();
+  // Predis sometimes requires Bearer, sometimes raw. Allow override via env.
+  const scheme = process.env.PREDIS_AUTH_SCHEME?.toLowerCase() || 'bearer';
+  if (scheme === 'raw' || scheme === 'none') return key;
+  return `Bearer ${key}`;
 }
 
 function getBrandId(): string {
@@ -51,7 +59,7 @@ export async function createPostFromBrief(
   const res = await fetch(`${PREDIS_BASE}/create_post/`, {
     method: 'POST',
     headers: {
-      Authorization: getApiKey(),
+      Authorization: getAuthHeader(),
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: body.toString(),
@@ -92,7 +100,7 @@ export async function getPostStatus(postId: string): Promise<PostStatus> {
 
   const res = await fetch(`${PREDIS_BASE}/get_posts/?${params.toString()}`, {
     method: 'GET',
-    headers: { Authorization: getApiKey() },
+    headers: { Authorization: getAuthHeader() },
   });
 
   const data = await res.json();
@@ -137,7 +145,7 @@ export async function schedulePost(
   const res = await fetch(`${PREDIS_BASE}/schedule_post/`, {
     method: 'POST',
     headers: {
-      Authorization: getApiKey(),
+      Authorization: getAuthHeader(),
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: body.toString(),
